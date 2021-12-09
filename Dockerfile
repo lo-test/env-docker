@@ -1,11 +1,13 @@
 FROM php:5.6-apache
 LABEL Name=uplott3 Version=0.0.1
 WORKDIR /var/www/html
-COPY docker-php.conf /etc/apache2/conf-available/docker-php.conf
-COPY sources.list /etc/apt/sources.list
+COPY ./conf/docker-php.conf /etc/apache2/conf-available/docker-php.conf
+COPY ./conf/sources.list /etc/apt/sources.list
+COPY ./conf/php.ini /usr/local/etc/php/php.ini
+COPY ./conf/fjfc_ecms_dev.conf /etc/apache2/sites-available/fjfc_ecms_dev.conf
 RUN apt-get update \
     && apt-get install libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev -y \
-    && curl -fsSL 'https://github.com/phpredis/phpredis/archive/refs/tags/2.2.8.tar.gz' -o php_redis.tar.gz \
+    && curl -fsSL 'https://hub.fastgit.org/phpredis/phpredis/archive/refs/tags/2.2.8.tar.gz' -o php_redis.tar.gz \
     && mkdir -p redis \
     && tar -xf php_redis.tar.gz -C redis --strip-components=1 \
     && rm php_redis.tar.gz \
@@ -38,5 +40,6 @@ RUN apt-get update \
     && docker-php-ext-install -j$(nproc) gd \
     # && docker-php-ext-enable gd \
     && docker-php-source delete \
-    && cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini \
+    # && cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini \
+    && a2ensite fjfc_ecms_dev \
     && a2enmod rewrite headers expires \

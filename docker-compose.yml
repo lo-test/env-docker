@@ -6,8 +6,6 @@ services:
       - "80:80"
     volumes: 
       - ./htdocs:/var/www/html
-      - ./docker-php.conf:/etc/apache2/conf-available/docker-php.conf
-      - ./sources.list:/etc/apt/sources.list
     environment:
       TZ: Asia/Shanghai,
     privileged: true
